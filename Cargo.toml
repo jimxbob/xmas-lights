@@ -13,6 +13,11 @@ panic-halt = "0.2.0"
 stm32f4xx-hal = { version = "0.6.0", features = ["stm32f411", "rt"]}
 cortex-m-rtfm = "0.5.1"
 
+smart-leds-trait = {version = "0.2.0"}
+smart-leds = {version = "0.3.0"}
+ws2812-spi = {version = "0.2.0"}
+ws2812-timer-delay = {version = "0.2.0"}
+
 # this lets you use `cargo fix`!
 [[bin]]
 name = "blinky"
