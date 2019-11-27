@@ -3,16 +3,16 @@
 
 extern crate panic_halt;
 
-use crate::hal::{prelude::*, stm32};
 use stm32f4xx_hal as hal;
-
-use crate::ws2812::Ws2812;
 use ws2812_spi as ws2812;
+
+use hal::spi::*;
+use hal::{prelude::*, stm32};
+
+use ws2812::Ws2812;
 
 use smart_leds::SmartLedsWrite;
 use smart_leds_trait::RGB8;
-
-use hal::spi::*;
 
 use cortex_m::iprintln;
 use cortex_m_semihosting::hprintln;
@@ -23,10 +23,10 @@ const PERIOD: u32 = 48_000_000;
 const NUM_LEDS: usize = 4;
 
 // Types for WS
+use hal::gpio::gpiob::{PB3, PB5};
+use hal::gpio::{Alternate, AF5};
+use hal::spi::{NoMiso, Spi};
 use hal::stm32::SPI1;
-use stm32f4xx_hal::gpio::gpiob::{PB3, PB5};
-use stm32f4xx_hal::gpio::{Alternate, AF5};
-use stm32f4xx_hal::spi::{NoMiso, Spi};
 
 type Pins = (PB3<Alternate<AF5>>, NoMiso, PB5<Alternate<AF5>>);
 
@@ -98,9 +98,8 @@ const APP: () = {
         ws.write(data.iter().cloned())
             .expect("Failed to write lights_on");
 
-        let next = cx.scheduled + PERIOD.cycles();
         cx.schedule
-            .lights_off(next)
+            .lights_off(cx.scheduled + PERIOD.cycles())
             .expect("Failed to schedule lights_off");
     }
 
@@ -116,9 +115,8 @@ const APP: () = {
         ws.write(empty.iter().cloned())
             .expect("Failed to write lights_off");
 
-        let next = cx.scheduled + PERIOD.cycles();
         cx.schedule
-            .lights_on(next)
+            .lights_on(cx.scheduled + PERIOD.cycles())
             .expect("Failed to schedule lights_on");
     }
 
