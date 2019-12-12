@@ -86,12 +86,13 @@ const APP: () = {
         let lights_on::Resources { ws, itm } = cx.resources;
         let port = &mut itm.stim[0];
 
+        hprintln!("ON").unwrap();
         iprintln!(port, "ON");
 
         let blue = RGB8 {
-            b: 0xa0,
-            g: 0,
-            r: 0,
+            b: 0xFE,
+            g: 0xFE,
+            r: 0xFE,
         };
         let data = [blue; NUM_LEDS];
 
